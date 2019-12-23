@@ -10,13 +10,14 @@ class App extends React.Component {
     this.state = {
       response: false,
       endpoint: "http://127.0.0.1:3000",
-      player: { id: undefined, name: "yeet" },
+      player: { id: undefined, name: "yeet", state: "none" },
       players: undefined
     };
 
     this.setPlayerName = this.setPlayerName.bind(this);
     this.loveIt = this.loveIt.bind(this);
     this.hateIt = this.hateIt.bind(this);
+    this.updatePlayerState = this.updatePlayerState.bind(this);
   }
 
   setPlayerName() {
@@ -26,28 +27,64 @@ class App extends React.Component {
 
   loveIt() {
     //console.log("Clicked: LOVE");
+    var player = this.state.player;
+
+    player.state = "Love";
+
+    this.setState({ player: player });
     socket.emit ('player-love', this.state.player);
+
+    this.updatePlayerState(player);
   }
 
   onPlayerLoveItReceived(player) {
     //console.log (player);
     console.log("Received: " + player.name + " loves it");
+    this.updatePlayerState(player);
+    
   }
 
   hateIt() {
     //console.log("Clicked: HATE");
+
+    var player = this.state.player;
+
+    player.state = "Hate";
+
+    this.setState({ player: player });
+
     socket.emit ('player-hate', this.state.player);
+
+    this.updatePlayerState(player);
   }
 
   onPlayerHateItReceived(player) {
     //console.log (player);
     console.log("Received: " + player.name + " hates it");
+    this.updatePlayerState(player);
+  }
+
+  updatePlayerState(player) {
+    var players = this.state.players;
+
+    console.log (player);
+
+    for (var i = 0; i < players.length; i++) {
+      if (player.id === players[i].id) {
+        players[i] = player;
+
+        console.log (players);
+        break;
+      }
+    }
+
+    this.setState({ players: players });
   }
   
   componentDidMount() {
     socket.on('connect', () => {
       console.log("Connected");
-      var player = { id: socket.io.engine.id, name: "yeet" };
+      var player = { id: socket.io.engine.id, name: "yeet", state: "None" };
       this.setState({ player: player });
     });
 
@@ -61,7 +98,7 @@ class App extends React.Component {
 
     socket.on("player-new-connected", playerId => { 
       var players = this.state.players;
-      players.push( {id: playerId, name: "None"} )
+      players.push( {id: playerId, name: "None", state: "None"} )
       console.log("New player connected: " + playerId);
       this.setState({ players: players })
     });
@@ -87,10 +124,25 @@ class App extends React.Component {
   }
 
   renderPlayer(player) {
+    var color = "green" 
+    switch (player.state) {
+      case "None":
+        color = "green";
+        break;
+      case "Hate":
+        color = "red";
+        break;
+      case "Love":
+        color = "gold";
+        break;
+    }
+
+    var state = `state-container ${color}`;
+
     return (
       <div className="player-container" key={player.id}>
-        <h1>Id: {player.id}</h1> 
-        <h1>Name: {player.name}</h1>
+        <div className={state}></div>
+        <h1 className="player-name">{player.name}</h1>
       </div>
     )
   }
@@ -107,7 +159,7 @@ class App extends React.Component {
     }
 
     return (
-      <div>
+      <div className="players">
         {players}
       </div>
     );

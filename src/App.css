@@ -36,3 +36,34 @@
     transform: rotate(360deg);
   }
 }
+
+.players {
+  width: 100%;
+}
+
+.player-container {
+  display: inline-block;
+  width: 240px;
+  margin: 24px;
+}
+
+.player-name {
+  font-size: 24px;
+}
+
+.state-container {
+  width: 100%;
+  padding-bottom: 100%;
+}
+
+.green {
+  background-color: green;
+}
+
+.red {
+  background-color: red;
+}
+
+.gold {
+  background-color: yellow;
+}
