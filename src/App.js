@@ -1,7 +1,11 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
 import socketIOClient from "socket.io-client";
+
+var hateImg = require('./hate.png');
+var bgImg = require('./bg.png');
+var loveImg = require('./bg.png');
+
 const socket = socketIOClient("http://127.0.0.1:3000");
 
 class App extends React.Component {
@@ -10,8 +14,9 @@ class App extends React.Component {
     this.state = {
       response: false,
       endpoint: "http://127.0.0.1:3000",
-      player: { id: undefined, name: "yeet", state: "none" },
-      players: undefined
+      player: { id: undefined, name: "yeet", state: "none", flicker: false },
+      players: undefined,
+      flicker: false
     };
 
     this.setPlayerName = this.setPlayerName.bind(this);
@@ -26,7 +31,6 @@ class App extends React.Component {
   }
 
   loveIt() {
-    //console.log("Clicked: LOVE");
     var player = this.state.player;
 
     player.state = "Love";
@@ -35,18 +39,18 @@ class App extends React.Component {
     socket.emit ('player-love', this.state.player);
 
     this.updatePlayerState(player);
+
+    this.startFlicker(player, 2000);
   }
 
   onPlayerLoveItReceived(player) {
-    //console.log (player);
     console.log("Received: " + player.name + " loves it");
     this.updatePlayerState(player);
     
+    this.startFlicker(player, 2000);
   }
 
   hateIt() {
-    //console.log("Clicked: HATE");
-
     var player = this.state.player;
 
     player.state = "Hate";
@@ -56,24 +60,48 @@ class App extends React.Component {
     socket.emit ('player-hate', this.state.player);
 
     this.updatePlayerState(player);
+
+    this.startFlicker(player, 2000);
   }
 
   onPlayerHateItReceived(player) {
-    //console.log (player);
     console.log("Received: " + player.name + " hates it");
     this.updatePlayerState(player);
+
+    this.startFlicker(player, 2000);
   }
 
-  updatePlayerState(player) {
+  startFlicker(player, duration) {
     var players = this.state.players;
 
-    console.log (player);
+    for (var i = 0; i < players.length; i++) {
+      if (player.id === players[i].id) {
+        players[i].flicker = true;
+        break;
+      }
+    }
+
+    this.setState({ players: players });
+
+    setTimeout(() => {
+      for (var i = 0; i < players.length; i++) {
+        if (player.id === players[i].id) {
+          players[i].flicker = false;
+          break;
+        }
+      }
+
+      this.setState({flicker: false});
+    }, duration)
+  }
+
+  // Get the new player state from server and replace the current one with it
+  updatePlayerState(player) {
+    var players = this.state.players;
 
     for (var i = 0; i < players.length; i++) {
       if (player.id === players[i].id) {
         players[i] = player;
-
-        console.log (players);
         break;
       }
     }
@@ -84,7 +112,7 @@ class App extends React.Component {
   componentDidMount() {
     socket.on('connect', () => {
       console.log("Connected");
-      var player = { id: socket.io.engine.id, name: "yeet", state: "None" };
+      var player = { id: socket.io.engine.id, name: "None", state: "None" };
       this.setState({ player: player });
     });
 
@@ -127,21 +155,28 @@ class App extends React.Component {
     var color = "green" 
     switch (player.state) {
       case "None":
-        color = "green";
+        color = bgImg;
         break;
       case "Hate":
-        color = "red";
+        color = hateImg;
         break;
       case "Love":
-        color = "gold";
+        color = loveImg;
         break;
     }
 
-    var state = `state-container ${color}`;
+    if (player.flicker) {
+      return (
+        <div className="player-container" key={player.id}>
+          <img className="state-img flicker" src={color} />
+          <h1 className="player-name">{player.name}</h1>
+        </div>
+      )
+    }
 
     return (
       <div className="player-container" key={player.id}>
-        <div className={state}></div>
+        <img className="state-img" src={color} />
         <h1 className="player-name">{player.name}</h1>
       </div>
     )
@@ -171,10 +206,8 @@ class App extends React.Component {
       <div className="App">
         {this.renderPlayers()}
 
-        <h1 onClick={this.setPlayerName}>SET PLAYER NAME</h1>
-
-        <h1 onClick={this.loveIt}>LOVE IT BUTTON</h1>
-        <h1 onClick={this.hateIt}>HATE IT BUTTON</h1>
+        <div className="btn btn-love unselectable" onClick={this.loveIt}>LOVE IT BUTTON</div>
+        <div className="btn btn-hate unselectable" onClick={this.hateIt}>HATE IT BUTTON</div>
       </div>
     );
   }
