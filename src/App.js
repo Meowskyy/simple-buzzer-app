@@ -158,6 +158,9 @@ class App extends React.Component {
   renderPlayer(player) {
     var color = "green" 
     switch (player.state) {
+      default:
+        color = bgImg;
+        break;
       case "None":
         color = bgImg;
         break;
@@ -173,7 +176,7 @@ class App extends React.Component {
       return (
         <div className="player-container" key={player.id}>
           <ReactAudioPlayer src={dislikeSoundEffect} autoPlay />
-          <img className="state-img flicker" src={color} />
+          <img className="state-img flicker" src={color} alt="state" />
           <h1 className="player-name">{player.name}</h1>
         </div>
       )
@@ -181,7 +184,7 @@ class App extends React.Component {
 
     return (
       <div className="player-container" key={player.id}>
-        <img className="state-img" src={color} />
+        <img className="state-img" src={color} alt="state" />
         <h1 className="player-name">{player.name}</h1>
       </div>
     )
