@@ -1,10 +1,13 @@
 import React from 'react';
+import ReactAudioPlayer from 'react-audio-player'
 import './App.css';
 import socketIOClient from "socket.io-client";
 
 var hateImg = require('./hate.png');
 var bgImg = require('./bg.png');
 var loveImg = require('./bg.png');
+
+var dislikeSoundEffect = require('./dislike.mp3')
 
 const socket = socketIOClient("http://127.0.0.1:3000");
 
@@ -66,6 +69,7 @@ class App extends React.Component {
 
   onPlayerHateItReceived(player) {
     console.log("Received: " + player.name + " hates it");
+
     this.updatePlayerState(player);
 
     this.startFlicker(player, 2000);
@@ -168,6 +172,7 @@ class App extends React.Component {
     if (player.flicker) {
       return (
         <div className="player-container" key={player.id}>
+          <ReactAudioPlayer src={dislikeSoundEffect} autoPlay />
           <img className="state-img flicker" src={color} />
           <h1 className="player-name">{player.name}</h1>
         </div>
@@ -206,8 +211,8 @@ class App extends React.Component {
       <div className="App">
         {this.renderPlayers()}
 
-        <div className="btn btn-love unselectable" onClick={this.loveIt}>LOVE IT BUTTON</div>
-        <div className="btn btn-hate unselectable" onClick={this.hateIt}>HATE IT BUTTON</div>
+        <div className="btn btn-love unselectable" onClick={this.loveIt}>LOVE IT</div>
+        <div className="btn btn-hate unselectable" onClick={this.hateIt}>HATE IT</div>
       </div>
     );
   }
