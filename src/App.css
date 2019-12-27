@@ -1,29 +1,25 @@
 @keyframes flickerAnimation {
   0%   { opacity:1; }
-  50%  { opacity:0; }
-  100% { opacity:1; }
+  100% { opacity:0; }
 }
 @-o-keyframes flickerAnimation{
   0%   { opacity:1; }
-  50%  { opacity:0; }
-  100% { opacity:1; }
+  100% { opacity:0; }
 }
 @-moz-keyframes flickerAnimation{
   0%   { opacity:1; }
-  50%  { opacity:0; }
-  100% { opacity:1; }
+  100% { opacity:0; }
 }
 @-webkit-keyframes flickerAnimation{
   0%   { opacity:1; }
-  50%  { opacity:0; }
-  100% { opacity:1; }
+  100% { opacity:0; }
 }
 
 .flicker {
-   -webkit-animation: flickerAnimation .5s infinite;
-   -moz-animation: flickerAnimation .5s infinite;
-   -o-animation: flickerAnimation .5s infinite;
-    animation: flickerAnimation .5s infinite;
+   -webkit-animation: flickerAnimation .15s linear .1s;
+   -moz-animation: flickerAnimation .15s linear .1s;
+   -o-animation: flickerAnimation .15s linear .1s;
+    animation: flickerAnimation .15s linear .1s;
 }
 
 html, body {
@@ -68,7 +64,6 @@ html, body {
 
 .red {
   object-fit: contain;
-  background-image: url("hate.png");
 }
 
 .gold {

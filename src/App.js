@@ -3,11 +3,11 @@ import ReactAudioPlayer from 'react-audio-player'
 import './App.css';
 import socketIOClient from "socket.io-client";
 
-var hateImg = require('./hate.png');
-var bgImg = require('./bg.png');
-var loveImg = require('./bg.png');
+var hateImg = require('./img/hate.png');
+var bgImg = require('./img/bg.png');
+var loveImg = require('./img/bg.png');
 
-var dislikeSoundEffect = require('./dislike.mp3')
+var dislikeSoundEffect = require('./audio/dislike.mp3')
 
 const socket = socketIOClient("http://127.0.0.1:3000");
 
@@ -43,14 +43,14 @@ class App extends React.Component {
 
     this.updatePlayerState(player);
 
-    this.startFlicker(player, 2000);
+    this.startFlicker(player, 800);
   }
 
   onPlayerLoveItReceived(player) {
     console.log("Received: " + player.name + " loves it");
     this.updatePlayerState(player);
     
-    this.startFlicker(player, 2000);
+    this.startFlicker(player, 800);
   }
 
   hateIt() {
@@ -64,7 +64,7 @@ class App extends React.Component {
 
     this.updatePlayerState(player);
 
-    this.startFlicker(player, 2000);
+    this.startFlicker(player, 800);
   }
 
   onPlayerHateItReceived(player) {
@@ -72,7 +72,7 @@ class App extends React.Component {
 
     this.updatePlayerState(player);
 
-    this.startFlicker(player, 2000);
+    this.startFlicker(player, 800);
   }
 
   startFlicker(player, duration) {
