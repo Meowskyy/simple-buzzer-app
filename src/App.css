@@ -1,25 +1,29 @@
 @keyframes flickerAnimation {
   0%   { opacity:1; }
-  100% { opacity:0; }
+  50%   { opacity:0; }
+  100% { opacity:1; }
 }
 @-o-keyframes flickerAnimation{
   0%   { opacity:1; }
-  100% { opacity:0; }
+  50%   { opacity:0; }
+  100% { opacity:1; }
 }
 @-moz-keyframes flickerAnimation{
   0%   { opacity:1; }
-  100% { opacity:0; }
+  50%   { opacity:0; }
+  100% { opacity:1; }
 }
 @-webkit-keyframes flickerAnimation{
   0%   { opacity:1; }
-  100% { opacity:0; }
+  50%   { opacity:0; }
+  100% { opacity:1; }
 }
 
 .flicker {
-   -webkit-animation: flickerAnimation .15s linear .1s;
-   -moz-animation: flickerAnimation .15s linear .1s;
-   -o-animation: flickerAnimation .15s linear .1s;
-    animation: flickerAnimation .15s linear .1s;
+   -webkit-animation: flickerAnimation .14s linear .14s;
+   -moz-animation: flickerAnimation .14s linear .14s;
+   -o-animation: flickerAnimation .14s linear .14s;
+    animation: flickerAnimation .14s linear .14s;
 }
 
 html, body {
@@ -82,14 +86,31 @@ html, body {
   user-select: none; /* Standard */
 }
 
+.btn-container {
+  width: 300px;
+  margin: 0 auto;
+}
+
 .btn {
   cursor: pointer;
+  width: 128px;
+  height: 128px;
+  font-size: 24px;
+  border-radius: 5px;
+}
+
+.btn-icon {
+  width: 128px;
+  height: 128px;
+  font-size: 48px;
 }
 
 .btn-love {
-
+  background-color: rgb(142, 222, 135);
+  float: left;
 }
 
 .btn-hate {
-  font-size: 24px;
+  background-color: rgb(158, 55, 69);
+  float: right;
 }
